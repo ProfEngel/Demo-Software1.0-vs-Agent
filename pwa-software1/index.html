@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#24666A">
+  <meta name="description" content="KI-Superkraft – mein Lernsystem: Software 1.0, Chatbots, Agentic AI, Harness, Tools und Skills verstehen.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="KI-Superkraft">
+  
+  <title>KI-Superkraft – mein Lernsystem</title>
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="badge-row">
+        <span class="badge">Reine Software 1.0</span>
+        <span class="badge">Keine KI-API</span>
+        <span class="badge">100% Lokal & Offline</span>
+      </div>
+      <h1>KI-Superkraft – mein Lernsystem</h1>
+      <p class="subtitle">Von klassischer Software zu Agentic AI, Harness, Tools und Verantwortung.</p>
+    </header>
+
+    <!-- Installations-Hinweis Banner (erscheint nur, wenn unterstützt) -->
+    <div id="install-banner" class="card" style="display: none; background: var(--salbei-light); border-color: var(--petrol);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <strong>App installieren:</strong> Für schnellen Zugriff zum Startbildschirm hinzufügen.
+        </div>
+        <button id="btn-install-pwa" class="btn btn-primary" type="button">Jetzt installieren</button>
+      </div>
+    </div>
+
+    <!-- Status Banner für Feedback -->
+    <div id="status-banner" class="status-banner" role="status" aria-live="polite"></div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist" aria-label="Hauptnavigation Lernsystem">
+      <button class="tab-btn" role="tab" id="tab-btn-cards" aria-selected="true" aria-controls="tab-cards" tabindex="0">
+        1. Lernkarten
+      </button>
+      <button class="tab-btn" role="tab" id="tab-btn-quiz" aria-selected="false" aria-controls="tab-quiz" tabindex="-1">
+        2. Zuordnungsfragen
+      </button>
+      <button class="tab-btn" role="tab" id="tab-btn-exact" aria-selected="false" aria-controls="tab-exact" tabindex="-1">
+        3. Freitextprüfung
+      </button>
+      <button class="tab-btn" role="tab" id="tab-btn-custom" aria-selected="false" aria-controls="tab-custom" tabindex="-1">
+        4. Eigene Notizen &amp; Karten
+      </button>
+      <button class="tab-btn" role="tab" id="tab-btn-data" aria-selected="false" aria-controls="tab-data" tabindex="-1">
+        5. Daten &amp; Sicherung
+      </button>
+    </nav>
+
+    <main id="main-content">
+      <!-- TAB 1: LERNKARTEN -->
+      <section id="tab-cards" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-cards">
+        <div class="card progress-card">
+          <div class="progress-header">
+            <span>Gesamtfortschritt</span>
+            <span id="progress-percent">0% (0 von 10 verstanden)</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Lernfortschritt">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <div class="filter-row" role="group" aria-label="Karten filtern">
+            <button class="filter-btn active" data-filter="all" type="button">Alle Karten</button>
+            <button class="filter-btn" data-filter="learning" type="button">Noch zu üben</button>
+            <button class="filter-btn" data-filter="learned" type="button">Verstanden ✓</button>
+          </div>
+        </div>
+
+        <div class="flashcard-box" aria-live="polite">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span id="card-tag" class="flashcard-tag">Grundlagen</span>
+            <span id="card-counter" style="font-size: 0.95rem; color: var(--text-muted);">Karte 1 von 10</span>
+          </div>
+          <h2 id="card-term" class="flashcard-term">Software 1.0</h2>
+          <p id="card-definition" class="flashcard-definition">
+            Klassische Programmierung: Menschen schreiben explizite Wenn-Dann-Regeln...
+          </p>
+          <div class="flashcard-meta">
+            <span id="card-status">Status: Im Lernprozess</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button id="btn-prev-card" class="btn btn-outline" type="button" aria-label="Vorherige Karte anzeigen">← Zurück</button>
+          <button id="btn-next-card" class="btn btn-outline" type="button" aria-label="Nächste Karte anzeigen">Weiter →</button>
+          <button id="btn-toggle-learn" class="btn btn-secondary" type="button">Ich habe diesen Begriff verstanden</button>
+          <button id="btn-delete-card" class="btn btn-danger" type="button" style="display: none;" aria-label="Diese eigene Karte löschen">Karte löschen</button>
+        </div>
+        <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+          Tipp: Du kannst auch die Pfeiltasten (← / →) und Enter/Leertaste auf der Tastatur nutzen.
+        </p>
+      </section>
+
+      <!-- TAB 2: ZUORDNUNGSFRAGEN -->
+      <section id="tab-quiz" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-quiz">
+        <div class="card">
+          <h2 class="card-title">Wissens-Check mit begründeten Lösungen</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">
+            Wähle für jede Situation den passenden Baustein aus. Deine Wahl wird sofort begründet.
+          </p>
+          <div id="quiz-container">
+            <!-- Dynamisch generierte Quizfragen -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: FREITEXTPRÜFUNG -->
+      <section id="tab-exact" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-exact">
+        <div class="card">
+          <h2 class="card-title">Freitextaufgabe: Begriffsdefinition</h2>
+          <p>
+            Tippe deine Definition für die Kernaufgabe eines <strong>Agenten</strong> ein:
+          </p>
+
+          <div class="exact-box">
+            <label for="exact-input" style="font-weight: 600; color: var(--petrol); display: block;">
+              Deine Formulierung eingeben:
+            </label>
+            <input 
+              type="text" 
+              id="exact-input" 
+              class="exact-input" 
+              placeholder="Tippe hier deinen Satz ein..."
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button id="btn-check-exact" class="btn btn-primary" type="button">Eingabe vergleichen</button>
+
+            <div id="exact-result" class="exact-result" aria-live="polite"></div>
+          </div>
+
+          <div style="margin-top: 1.25rem; font-size: 0.95rem; color: var(--text-muted); background: var(--salbei-light); padding: 0.75rem 1rem; border-radius: 12px;">
+            <strong>Wichtiger Hinweis zur Software 1.0 Prüfung:</strong><br>
+            Dieses System verwendet bewusst keine generative KI, sondern einen strikten Zeichenfolgen-Vergleich. Bei Unterschieden sagt das System neutral <em>„nicht exakt gleich – Bedeutung selbst prüfen“</em> und niemals <em>„fachlich falsch“</em>, da eine andere Formulierung sinngemäß vollkommen richtig sein kann.
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: EIGENE KARTEN & NOTIZEN -->
+      <section id="tab-custom" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-custom">
+        <div class="card">
+          <h2 class="card-title">Eigene Lernkarte hinzufügen</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">
+            Ergänze das System um deine eigenen Gedanken oder Vorlesungsbegriffe:
+          </p>
+          <form id="new-card-form">
+            <div class="form-group">
+              <label for="new-card-term">Begriff / Titel *</label>
+              <input type="text" id="new-card-term" class="form-control" required placeholder="z. B. Context Window oder System Prompt">
+            </div>
+            <div class="form-group">
+              <label for="new-card-category">Kategorie (optional)</label>
+              <input type="text" id="new-card-category" class="form-control" placeholder="z. B. Eigene Notiz oder Vorlesung Woche 3">
+            </div>
+            <div class="form-group">
+              <label for="new-card-def">Erklärung in deinen eigenen Worten *</label>
+              <textarea id="new-card-def" class="form-control" required placeholder="Beschreibe kurz und prägnant, was dieser Begriff bedeutet..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Karte speichern</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Meine Vorlesungsnotizen</h2>
+          <p style="color: var(--text-muted); margin-bottom: 0.5rem;">
+            Hier kannst du freie Notizen hinterlegen. Alles bleibt privat im Speicher deines Browsers.
+          </p>
+          <div class="form-group">
+            <label for="study-notes" class="sr-only" style="display: none;">Freie Notizen</label>
+            <textarea id="study-notes" class="form-control notes-textarea" placeholder="Wichtige Punkte aus dem Vortrag notieren..."></textarea>
+          </div>
+          <div id="notes-status" style="font-size: 0.9rem; color: var(--petrol); font-weight: 600;">
+            Automatisch lokal gespeichert ✓
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: DATEN & SICHERUNG -->
+      <section id="tab-data" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-data">
+        <div class="card">
+          <h2 class="card-title">Lernstand sichern &amp; übertragen</h2>
+          <p style="color: var(--text-dark); margin-bottom: 1rem;">
+            Alle deine Karten, Notizen und Quiz-Ergebnisse werden ausschließlich lokal auf diesem Gerät gespeichert (keine Cloud, keine Cookies, keine Tracker).
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <button id="btn-export-json" class="btn btn-primary" type="button">
+              Lernstand als JSON exportieren
+            </button>
+            <label class="btn btn-outline" style="cursor: pointer; margin: 0;">
+              Lernstand importieren (JSON)
+              <input type="file" id="import-file-input" accept=".json,application/json" style="display: none;">
+            </label>
+          </div>
+
+          <h3 style="font-size: 1.15rem; color: var(--petrol); margin-bottom: 0.5rem;">Zurücksetzen</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.75rem;">
+            Möchtest du von vorne beginnen? Alle eigenen Karten und Markierungen werden gelöscht und die Standard-Karten wiederhergestellt.
+          </p>
+          <button id="btn-reset-data" class="btn btn-danger" type="button">
+            Gesamten Lernstand zurücksetzen
+          </button>
+        </div>
+
+        <div class="card" style="background: var(--salbei-light); border-color: var(--salbei);">
+          <h2 class="card-title" style="font-size: 1.15rem;">Installationsanleitung (PWA)</h2>
+          <ul style="padding-left: 1.25rem; font-size: 1rem; color: var(--text-dark); line-height: 1.6;">
+            <li><strong>iPad / iPhone (Safari):</strong> Tippe unten bzw. oben auf die Schaltfläche <em>Teilen</em> (Viereck mit Pfeil nach oben) und wähle <em>„Zum Home-Bildschirm“</em>.</li>
+            <li><strong>Android (Chrome / Edge):</strong> Tippe auf das Drei-Punkte-Menü und wähle <em>„App installieren“</em> oder <em>„Zum Startbildschirm hinzufügen“</em>.</li>
+            <li><strong>Windows / Mac (Chrome, Edge, Brave):</strong> Klicke im Adressfeld des Browsers auf das Installations-Symbol (Bildschirm mit Pfeil) oder das Dreipunkt-Menü → <em>„App installieren“</em>.</li>
+            <li><strong>Browser-Nutzung:</strong> Die App kann jederzeit auch ohne Installation direkt im Browser voll funktionsfähig und offline genutzt werden.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Bestätigungsmodal für Reset -->
+  <div id="confirm-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <h2 id="modal-title" style="color: #A32020; font-size: 1.3rem; margin-bottom: 0.75rem;">Lernstand zurücksetzen?</h2>
+      <p style="color: var(--text-dark); margin-bottom: 1.25rem;">
+        Bist du sicher? Alle erstellten Karten, Notizen und der Lernfortschritt werden unwiderruflich gelöscht.
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button id="btn-confirm-modal-no" class="btn btn-outline" type="button">Abbrechen</button>
+        <button id="btn-confirm-modal-yes" class="btn btn-danger" type="button">Ja, alles löschen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

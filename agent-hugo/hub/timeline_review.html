@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entwicklungs-Timeline: Von Software 1.0 zu Agentic AI</title>
+  <style>
+    :root {
+      --bg: #F7F7F5;
+      --card-bg: #FFFFFF;
+      --primary: #24666A;
+      --primary-light: #DCEFE1;
+      --text: #182C33;
+      --text-muted: #59737D;
+      --border: #D6E2E2;
+      --accent-p1: #2B7A78;
+      --accent-p2: #805AD5;
+      --tag-bg: #EEF5F4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 30px 16px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.1rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge-p1 { background: var(--primary-light); color: var(--primary); }
+    .badge-p2 { background: #E9D8FD; color: #553C9A; }
+    .badge-clean { background: #EDF2F7; color: #4A5568; }
+
+    /* Filter Controls */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 35px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Timeline Container */
+    .timeline {
+      position: relative;
+      padding: 10px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 31px;
+      width: 4px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    /* Timeline Step Item */
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+      padding-left: 75px;
+      transition: opacity 0.3s ease;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 17px;
+      top: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--primary);
+      z-index: 1;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .timeline-item.phase-2 .timeline-dot {
+      border-color: var(--accent-p2);
+      color: var(--accent-p2);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-phase {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .phase-1 .card-phase { background: var(--primary-light); color: var(--primary); }
+    .phase-2 .card-phase { background: #E9D8FD; color: #553C9A; }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+    }
+
+    .card-summary {
+      font-size: 0.98rem;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .card-highlights {
+      background: var(--tag-bg);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.92rem;
+    }
+
+    .card-highlights ul {
+      padding-left: 20px;
+    }
+
+    .card-highlights li {
+      margin-bottom: 4px;
+    }
+
+    /* Prompt Accordion Button */
+    .prompt-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .prompt-toggle:hover {
+      background: #F0F4F4;
+    }
+
+    .prompt-box {
+      display: none;
+      margin-top: 14px;
+      background: #1F2933;
+      color: #E2E8F0;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      line-height: 1.5;
+      border-left: 4px solid var(--primary);
+    }
+
+    .prompt-box.open {
+      display: block;
+    }
+
+    .image-preview {
+      margin-top: 14px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      max-width: 100%;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 600px) {
+      .timeline::before { left: 19px; }
+      .timeline-dot { left: 5px; width: 28px; height: 28px; font-size: 0.75rem; }
+      .timeline-item { padding-left: 45px; }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Chronologische Entwicklungs-Timeline</h1>
+      <p>Entwicklungsschritte vom deterministischen Offline-Lernsystem (Software 1.0) zum sicheren KI-Lerncoach (Agentic AI Hugo). Bereinigt um Zugangsdaten und Netzwerkdetails für die direkte Weitergabe.</p>
+      
+      <div class="badge-bar">
+        <span class="badge badge-p1">Teil 1: Software 1.0 (Deterministisch)</span>
+        <span class="badge badge-p2">Teil 2: Agentic AI (Lerncoach Hugo)</span>
+        <span class="badge badge-clean">🛡️ Sanitized: Ohne Secrets & Private IP-Inhalte</span>
+      </div>
+    </header>
+
+    <!-- Filter Buttons -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterTimeline('all')">Gesamte Timeline (Alle Schritte)</button>
+      <button class="filter-btn" onclick="filterTimeline('phase-1')">Nur Teil 1: Software 1.0</button>
+      <button class="filter-btn" onclick="filterTimeline('phase-2')">Nur Teil 2: Agentic AI</button>
+    </div>
+
+    <!-- Timeline Container -->
+    <div class="timeline" id="timelineList">
+
+      <!-- STEP 1 -->
+      <div class="timeline-item phase-1">
+        <div class="timeline-dot">1</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 1: Software 1.0</span>
+              <h2 class="card-title">Erstellung der barrierefreien Offline-PWA</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Aufbau einer komplett lokalen, browserbasierten Lern-Webapp (Progressive Web App) für Studierende ohne Vorkenntnisse über Grundlagen von Software 1.0, Chatbots und KI-Agenten.
+          </p>
+          <div class="card-highlights">
+            <strong>Highlights & Architektur:</strong>
+            <ul>
+              <li><strong>Zero Cloud / Zero API:</strong> Reine Software 1.0, kein LLM-Backbone, keine Tracker oder externe CDNs.</li>
+              <li><strong>Deterministischer Freitext-Vergleich:</strong> Exakter Zeichenvergleich. Bei Differenz lautet die Rückmeldung neutral: <em>„nicht exakt gleich – Bedeutung selbst prüfen“</em> (kein pauschales Falsch-Urteil).</li>
+              <li><strong>PWA & Datenschutz:</strong> Lokaler Service Worker (Offline-first), 10 Kern-Lernkarten, Datenhaltung rein im Browser (`localStorage`), sicherer JSON-Export/-Import mit Schemaprüfung.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p1')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p1">Baue im freigegebenen Projektordner eine kleine deutschsprachige PWA „KI-Superkraft – mein Lernsystem“. Thema dieses Vortrags: Software 1.0, Chatbot, Agentic AI, Prompt, Harness, Tools, Skills, Memory und menschliche Prüfung. Zielgruppe: Studierende ohne IT-Vorkenntnisse.
+
+Zuerst reine Software 1.0, KEIN Modellaufruf und keine API. Zehn fachlich korrekte Lernkarten, kurze Zuordnungsfragen mit begründeten Lösungen, Lernen/nochmals üben, Fortschritt, eigene Karten und Notizen. Eine Freitextaufgabe vergleicht bewusst nur die exakte Zeichenfolge und sagt bei Abweichung „nicht exakt gleich – Bedeutung selbst prüfen“, niemals „fachlich falsch“. Musterlösung: „Ein Agent wählt erlaubte Werkzeuge und prüft ihre Ergebnisse.“
+
+Design: ruhig, klar und einfach; Creme #F7F7F5, Petrol #24666A, Salbei #DCEFE1, dunkle Schrift #182C33. Keine Textwüsten, Tracker oder CDN.
+
+Technik: mehrere lokale Dateien, relative Pfade, Manifest mit Icons, versionierter Service Worker. Nach dem ersten vollständigen Laden offline lauffähig. Daten nur lokal, schema- und größenvalidierter JSON-Export/-Import, Reset nur nach Bestätigung. Keine Secrets. Gib Start- und Installationsanleitung.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="timeline-item phase-1">
+        <div class="timeline-dot">2</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 1: Bereitstellung</span>
+              <h2 class="card-title">Lokaler Server-Start & Mobile-Freigabe</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Bereitstellung der Offline-PWA über einen lokalen Webserver, sodass mobile Endgeräte (iPad, iPhone, Tablets) die Webapp aufrufen und direkt als vollwertige Home-Bildschirm-App installieren können.
+          </p>
+          <div class="card-highlights">
+            <strong>Highlights:</strong>
+            <ul>
+              <li>Lokaler HTTPS-kompatibler Server-Start ohne externe Abhängigkeiten.</li>
+              <li>Einrichtung zur barrierefreien Installation auf Tablets & mobilen Devices (Safari: Zum Home-Bildschirm / Chrome: App installieren).</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p2')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p2">Kannst Du bitte selbst alles möglich machen, damit wir die Seite öffnen können? Also Server und Co? Und per gesichertem Netzwerk für mobile Testgeräte freigeben.</div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="timeline-item phase-2">
+        <div class="timeline-dot">3</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 2: Agentic AI</span>
+              <h2 class="card-title">Initialisierung des modelagnostischen Agenten „Hugo“</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Aufbau einer separaten Entwicklungsumgebung für den ersten agentischen Lerncoach „Hugo“ mit festen Sicherheitsgrenzen und deterministischen Werkzeugen. Die Offline-PWA bleibt unangetastet.
+          </p>
+          <div class="card-highlights">
+            <strong>Highlights & Leitplanken:</strong>
+            <ul>
+              <li><strong>Zero Trust Sandbox:</strong> Kein Betriebssystem-Shell-Zugriff, keine offenen Netzwerk-Sockets für den Agenten.</li>
+              <li><strong>Exakt 4 deterministische Tools:</strong> `get_card` (Karten laden), `search_memory` (SQLite-Memory abfragen), `update_progress` (Fortschritt belegen), `clarify_question` (gezielte Rückfrage).</li>
+              <li><strong>Verhaltenskodex (`AGENTS.md`) & Skills (`SKILL.md`):</strong> Fortschritt darf nur bei nachvollziehbarer Evidenz verbucht werden. Wiederholungen zählen nicht doppelt. Human-in-the-Loop vor kritischen Aktionen.</li>
+              <li><strong>Automatisierte Test-Suite:</strong> 5 Testfälle gegen Prompt Injections, fehlerhafte Tools und Ambiguitäten.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p3')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p3">Arbeite in einer separaten Kopie der KI-Lernwerkstatt. Die reine Offline-PWA bleibt unverändert. Baue einen kleinen modelagnostischen Agenten „Hugo“, nutzbar im Harness-Chat/CLI und optional über lokale HTML-UI. Der erste Agent erscheint bereits als Kachel in einem kleinen Hub. Keine schöne UI als Agent ausgeben.
+
+Auftrag: Lernantworten zu Software 1.0, Chatbot und Agent verstehen; freigegebenes Memory vor jeder Beurteilung nachschlagen; bei Unsicherheit rückfragen; nur bei belegter richtiger Antwort erlaubten Fortschritt markieren und danach kontrollieren. Regeln kurz in AGENTS.md, Vorgehen als Skill; deterministische Werkzeuge für Karten, Memory und Fortschritt. Maximal vier Tools je Auftrag, höchstens eine Rückfrage, kein Shell-/Netzwerkzugriff für den Laufzeitagenten. Modell austauschbar, kleinere Modelle erst nach denselben Tests zulassen.
+
+Nutze material/agent/coach.py als lokal begrenztes Werkzeug und dessen SQLite-Memory. Browserdaten sind NICHT automatisch im Harness: nur expliziter validierter Import/Export mit Freigabe; eine Datenwahrheit je Ausbaustand. Keine API-Schlüssel in Browser, Git oder localStorage; für echte Modellaufrufe den vorhandenen Harness nutzen. Eine Schrittanimation muss als Simulation gekennzeichnet sein.
+
+Zeige Tool-Protokoll und prüfe die fünf Fallaufgaben plus Wiederholung: richtige Paraphrase, Teilantwort → Rückfrage, falsche Antwort → nicht abschließen, Prompt-Injection → keine zusätzlichen Rechte, ungültige Tooldaten → keine Änderung; Wiederholung zählt nicht doppelt. Vor Senden, Löschen, Veröffentlichung oder Zugriff auf private Daten immer stoppen und fragen.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="timeline-item phase-2">
+        <div class="timeline-dot">4</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 2: Agentic AI</span>
+              <h2 class="card-title">Interaktiver Agenten-Hub & Harness-Bereitstellung</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Bereitstellung des Agenten Hugo über einen interaktiven Hub (`hub/index.html`) sowie den Antigravity-Harness, inklusive Live-Visualisierung des Tool-Protokolls.
+          </p>
+          <div class="card-highlights">
+            <strong>Highlights:</strong>
+            <ul>
+              <li><strong>UI-Ehrlichkeit:</strong> Transparente Kennzeichnung, dass die UI nur eine Schnittstelle ist und Schrittanimationen reine Simulationen darstellen.</li>
+              <li><strong>Modell-Kopplung:</strong> Anbindung über das lokale Modell via Antigravity Harness (ohne Secrets im Frontend).</li>
+              <li><strong>Sichere Bereitstellung:</strong> Lokaler Hub auf separatem Port getrennt von der Software 1.0 PWA.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p4')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p4">Kannst Du es starten und bitte das konfigurierte Modell über die Antigravity-App nutzen, die hier auf dem PC installiert ist. Stelle es über einen separaten Port für den Hub bereit.</div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="timeline-item phase-2">
+        <div class="timeline-dot">5</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 2: Didaktik & Klärung</span>
+              <h2 class="card-title">Funktionsweise des Agenten im Unterschied zu Karteikarten</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Erklärung des qualitativen Unterschieds zwischen starren Karteikarten (Software 1.0) und dem agentischen Lerncoach (Agentic AI).
+          </p>
+          <div class="card-highlights">
+            <strong>Kernelemente des Kolloquiums:</strong>
+            <ul>
+              <li><strong>Kein starres Multiple-Choice:</strong> Hugo führt ein dialogisches Prüfungsgespräch und versteht freie Paraphrasierungen.</li>
+              <li><strong>Schrittweiser Agenten-Zyklus:</strong> Karte lesen &rarr; Gedächtnis durchsuchen &rarr; Evidenz vergleichen &rarr; Feedback geben / gezielt rückfragen &rarr; Fortschritt in SQLite verbuchen.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p5')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p5">Was genau kann ich nun mit diesem Agenten machen? Sind das Karteikarten? Sind das Fragen und ich antworte oder …</div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="timeline-item phase-2">
+        <div class="timeline-dot">6</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 2: IT-Sicherheit & Metapher</span>
+              <h2 class="card-title">Sicherheits-Audit & Erklärung der „Sandbox“</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Umfassende Sicherheitsanalyse des erzeugten Codes und kindgerechte Erklärung des Sandboxing-Konzepts zur Verhinderung unbefugter Systemeingriffe.
+          </p>
+          <div class="card-highlights">
+            <strong>Highlights des Sicherheitschecks:</strong>
+            <ul>
+              <li><strong>Zero System Access:</strong> Hugo hat keinen Zugriff auf PowerShell, Terminal, `subprocess` oder Netzwerk-Sockets.</li>
+              <li><strong>Metapher:</strong> Der Agent sitzt wie ein Kind in einem sicheren Sandkasten (Sandbox) im Wohnzimmer: Selbst wenn er mit Sand wirft, bleibt das Wohnzimmer (das Betriebssystem) unberührt.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p6')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p6">Danke dafür. Kannst Du nun bitte den von Dir erzeugten Code prüfen auf Schwachstellen? Nicht dass Bedrohungen zu einem IT-Sicherheitsproblem führen.
+
+Erkläre auch bitte wie dieser Code ausgeführt wird? Also lokal auf diesem PC, so dass er rein theoretisch auf alles auf dem PC zugreifen kann oder in einer Sandbox hier auf dem System und wenn ja, erkläre bitte auch was eine Sandbox ist. Erkläre es einfach mit Beispielen (als wäre ich 10 Jahre alt) und mit wenigen Worten.</div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="timeline-item phase-2">
+        <div class="timeline-dot">7</div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-phase">Phase 2: Visualisierung</span>
+              <h2 class="card-title">Plakative Comic-Infografik: Die Sandbox-Metapher</h2>
+            </div>
+          </div>
+          <p class="card-summary">
+            Erstellung eines anschaulichen Comic-Schaubilds im Side-by-Side-Vergleich: Links das Kind im Sandkasten im Wohnzimmer, rechts Agent Hugo in seiner Software-Sandbox auf dem PC.
+          </p>
+          <div class="card-highlights">
+            <strong>Didaktischer Nutzen:</strong>
+            <ul>
+              <li>Ermöglicht auch Nicht-IT-Experten sofort zu begreifen, warum ein geschützter Agent trotz KI-Power nicht ausbrechen kann.</li>
+            </ul>
+          </div>
+          <button class="prompt-toggle" onclick="togglePrompt('p7')">
+            <span>📝 Auftrag / Prompt ansehen</span>
+          </button>
+          <div class="prompt-box" id="p7">Danke für die Erklärung. Kannst Du das ebenso plakativ in einem Metapher-Schaubild darstellen? Links den Sandkasten und rechts Hugo den Agenten in seiner PC-Sandbox? Bitte als generiertes Schaubild, plakativ im Comic-Stil.</div>
+          
+          <div class="image-preview">
+            <img src="sandbox_comic.jpg" alt="Comic-Infografik: Der Sandkasten vs. Agent Hugo Sandbox" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Entwicklungsprotokoll & Meilensteinübersicht | Stand: November 2026 | Bereinigt für den Wissenstransfer
+    </footer>
+  </div>
+
+  <script>
+    function togglePrompt(id) {
+      const box = document.getElementById(id);
+      box.classList.toggle('open');
+    }
+
+    function filterTimeline(phase) {
+      const items = document.querySelectorAll('.timeline-item');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      items.forEach(item => {
+        if (phase === 'all') {
+          item.style.display = 'block';
+        } else if (item.classList.contains(phase)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

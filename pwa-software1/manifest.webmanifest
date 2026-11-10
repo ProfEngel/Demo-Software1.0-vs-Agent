@@ -1,0 +1,28 @@
+{
+  "name": "KI-Superkraft – mein Lernsystem",
+  "short_name": "KI-Superkraft",
+  "description": "Lernsystem zu Software 1.0, Chatbots, Agentic AI, Harness, Tools und Skills für Studierende.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F7F5",
+  "theme_color": "#24666A",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
