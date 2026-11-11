@@ -10,7 +10,7 @@ Es richtet sich ganz bewusst an **Studierende und Interessierte ohne IT-Vorkennt
 
 Die Entstehungsgeschichte, alle Prompts und die didaktischen Highlights kannst du direkt im Browser als eigenständige Progressive Web App (PWA) aufrufen:
 
-👉 **[Hier geht es zur interaktiven Timeline-PWA](https://<DEIN-GITHUB-NUTZERNAME>.github.io/<REPO-NAME>/)**
+👉 **[Hier geht es zur interaktiven Timeline-PWA](https://profengel.github.io/Demo-Software1.0-vs-Agent/)**
 
 *(Die Timeline lässt sich auf dem Smartphone oder Tablet per „Zum Home-Bildschirm“ als echte Offline-App installieren!)*
 
