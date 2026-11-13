@@ -6,13 +6,14 @@ Es richtet sich ganz bewusst an **Studierende und Interessierte ohne IT-Vorkennt
 
 ---
 
-## 🌐 Interaktive Live-Timeline (GitHub Pages)
+## 🌐 Interaktive Live-Timelines (GitHub Pages)
 
 Die Entstehungsgeschichte, alle Prompts und die didaktischen Highlights kannst du direkt im Browser als eigenständige Progressive Web App (PWA) aufrufen:
 
-👉 **[Hier geht es zur interaktiven Timeline-PWA](https://profengel.github.io/Demo-Software1.0-vs-Agent/)**
+1. 👉 **[1. Timeline-PWA: Software 1.0 vs. Agentic AI (Lerncoach Hugo)](https://profengel.github.io/Demo-Software1.0-vs-Agent/)**
+2. 👉 **[2. Timeline: WINF1 Lernapp & Security Audit der Skripte](https://profengel.github.io/Demo-Software1.0-vs-Agent/winf1-timeline/timeline.html)** *(inkl. [WINF1 Lernapp-PWA](https://profengel.github.io/Demo-Software1.0-vs-Agent/winf1-timeline/index.html))*
 
-*(Die Timeline lässt sich auf dem Smartphone oder Tablet per „Zum Home-Bildschirm“ als echte Offline-App installieren!)*
+*(Die Timelines und Lernapps lassen sich auf dem Smartphone oder Tablet per „Zum Home-Bildschirm“ als echte Offline-App installieren!)*
 
 ---
 

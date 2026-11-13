@@ -1,0 +1,18 @@
+{
+  "name": "WINF1 Karteikarten – Wirtschaftsinformatik",
+  "short_name": "WINF1 Cards",
+  "description": "Reine Karteikarten-Lernapp für Wirtschaftsinformatik: Sozio-technische Informationssysteme, GenAI, Agentic AI und mehr.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

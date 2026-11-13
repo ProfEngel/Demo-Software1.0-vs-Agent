@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Projekt-Timeline: Entwicklung der WINF1 Lernapp</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #273549;
+      --border: rgba(148, 163, 184, 0.2);
+      --accent: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-green: #34d399;
+      --accent-amber: #fbbf24;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.55;
+      padding: 32px 16px 64px;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin: 0 auto 20px;
+    }
+
+    /* Metric Cards */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .metric-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Timeline Filter */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text);
+      background: var(--card-hover);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      color: #0f172a;
+      border-color: transparent;
+    }
+
+    /* Timeline Structure */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 14px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-purple), rgba(129, 140, 248, 0.1));
+    }
+
+    .step-item {
+      position: relative;
+      margin-bottom: 28px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .step-item.hidden {
+      display: none;
+    }
+
+    .step-dot {
+      position: absolute;
+      left: -28px;
+      top: 18px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: all 0.2s ease;
+    }
+
+    .step-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .step-time {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .step-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+    }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .step-summary {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    /* Accordion / Tab Buttons */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .detail-toggle-btn {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .detail-toggle-btn:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .detail-toggle-btn.active {
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .detail-panel {
+      display: none;
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .detail-panel.show {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-panel strong {
+      color: var(--accent);
+    }
+
+    .detail-panel ul {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+
+    .detail-panel li {
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    .takeaway-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--accent-green);
+      background: rgba(52, 211, 153, 0.08);
+      border-radius: 0 10px 10px 0;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+    }
+
+    /* Actions Footer */
+    .app-cta {
+      margin-top: 48px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(129, 140, 248, 0.12));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+    }
+
+    .app-cta h2 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .app-cta p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      color: #0f172a;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: filter 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      .timeline {
+        padding-left: 20px;
+      }
+      .step-dot {
+        left: -20px;
+      }
+      .step-card {
+        padding: 18px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-pill">Entwicklungs-Zusammenfassung</span>
+      <h1>WINF1 Lernapp – Projekt-Ablauf</h1>
+      <p class="lead">
+        Chronologische Schritt-für-Schritt-Dokumentation von der ersten Idee bis zur hybriden KI-gestützten Freitext-Lernapp.
+      </p>
+
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-number">6</div>
+          <div class="metric-label">Entwicklungs-Phasen</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">3</div>
+          <div class="metric-label">Lernmodi (PWA)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">24</div>
+          <div class="metric-label">WINF-Lernmodule</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">0</div>
+          <div class="metric-label">Setup-Aufwand (Zero-Config)</div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">Alle Phasen (6)</button>
+        <button class="filter-btn" data-filter="highlight">Highlights & Meilensteine</button>
+        <button class="filter-btn" data-filter="architecture">Architektur & KI</button>
+      </div>
+    </header>
+
+    <main class="timeline">
+
+      <!-- Step 1 -->
+      <article class="step-item" data-category="highlight">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 1 · Initialisierung</span>
+              <h2 class="step-title">1. Die Grundidee: Reine Karteikarten-PWA</h2>
+            </div>
+            <span class="step-time">08:37 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Auftrag zur Erstellung einer responsiven, installierbaren Progressive Web App (PWA) für Wirtschaftsinformatik. Fokus: Reine Karteikarten (Vorderseite Frage, Rückseite Antwort) zu Sozio-technischen IS, GenAI, Agentic AI und Kernbegriffen.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s1-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s1-tech">⚙️ Technische Umsetzung</button>
+            <button class="detail-toggle-btn" data-target="s1-result">💡 Ergebnis</button>
+          </div>
+
+          <div id="s1-order" class="detail-panel show">
+            <strong>Original-Anforderung:</strong> „Erstelle mir bitte eine Lernapp als PWA, in dem die Inhalte für Wirtschaftsinformatik abgefragt werden. Diese LernApp ist eine reine Karteikarten-Lernapp. Also Frage vorn und wenn ich soweit bin dreh ich die Karte und dann kommt die Lösung.“
+          </div>
+          <div id="s1-tech" class="detail-panel">
+            <strong>Gebautes Fundament:</strong>
+            <ul>
+              <li>PWA-Dateien: <code>manifest.webmanifest</code>, <code>sw.js</code> (Service Worker für Offline-Fähigkeit), Vektor-Icon <code>icon.svg</code>.</li>
+              <li>Strukturierter Fragenkatalog in <code>cards.js</code> (24 Fachfragen zu MAT-Modell, IS vs. AS, ERP, RAG, ReAct, APIs, Cloud etc.).</li>
+              <li>3D-CSS-Animation für realitätsnahes Umdrehen der Karten.</li>
+              <li>Tastatursteuerung: <code>Leertaste</code> / <code>Enter</code> zum Umdrehen, <code>1</code> / <code>2</code> zur Selbsteinschätzung.</li>
+            </ul>
+          </div>
+          <div id="s1-result" class="detail-panel">
+            <strong>Ergebnis:</strong> Vollwertige, installierbare Offline-PWA mit flüssiger 3D-Karteikartenansicht, Themenfiltern und Fortschrittsspeicherung in <code>localStorage</code>.
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Meilenstein:</strong> Funktionierende Basisanwendung innerhalb von wenigen Minuten modular und erweiterbar aufgesetzt.
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="step-item" data-category="all">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 2 · Bereitstellung</span>
+              <h2 class="step-title">2. Barrierefreier Start per Webserver</h2>
+            </div>
+            <span class="step-time">08:40 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Beseitigung technischer Hürden: Da ES-Module und moderne Service Worker HTTP/HTTPS erfordern, wurde der Server direkt im Hintergrund gestartet, damit der Nutzer nicht mit CLI-Befehlen hantieren muss.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s2-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s2-tech">⚙️ Technische Umsetzung</button>
+            <button class="detail-toggle-btn" data-target="s2-result">💡 Ergebnis</button>
+          </div>
+
+          <div id="s2-order" class="detail-panel show">
+            <strong>Original-Anforderung:</strong> „das check ich nicht. Kannst Du das starten?“
+          </div>
+          <div id="s2-tech" class="detail-panel">
+            <strong>Hintergrund-Dienst:</strong>
+            <ul>
+              <li>Start eines autarken Daemons via <code>python -m http.server 8080</code> auf dem lokalen Host.</li>
+              <li>Vollständige Freigabe für Browser-Zugriff und PWA-Installation ohne manuelle Terminal-Aktionen.</li>
+            </ul>
+          </div>
+          <div id="s2-result" class="detail-panel">
+            <strong>Ergebnis:</strong> Ein Klick auf <code>http://localhost:8080</code> reichte aus, um die App im Browser zu nutzen.
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Fokus:</strong> Maximale Benutzerfreundlichkeit – der Agent übernimmt den technischen Betrieb komplett.
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="step-item" data-category="highlight">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 3 · Didaktik</span>
+              <h2 class="step-title">3. Didaktische Erweiterung: „Erst lernen, dann testen“</h2>
+            </div>
+            <span class="step-time">08:48 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Ergänzung eines strukturierten Lernmodus: Nutzer wollen Fachbegriffe vor der Abfrage erst in Ruhe lesen und verstehen können.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s3-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s3-tech">⚙️ Technische Umsetzung</button>
+            <button class="detail-toggle-btn" data-target="s3-result">💡 Ergebnis</button>
+          </div>
+
+          <div id="s3-order" class="detail-panel show">
+            <strong>Original-Anforderung:</strong> „Bevor ich abgefragt werde würde ich es gerne erst mal lernen können. kannst Du da was machen“
+          </div>
+          <div id="s3-tech" class="detail-panel">
+            <strong>Modus-Architektur:</strong>
+            <ul>
+              <li>Einbau einer globalen Modus-Umschaltung im Kopfbereich.</li>
+              <li>Neuer Modus <code>📖 Erst lernen</code>: Listenansicht aller Themen mit Begriff, didaktischer Erklärung und hervorgehobenem Merksatz.</li>
+              <li>Fließender Übergang: Am Ende der Lernliste führt ein Button direkt in die Abfrage.</li>
+            </ul>
+          </div>
+          <div id="s3-result" class="detail-panel">
+            <strong>Ergebnis:</strong> Aus einer reinen Abfrage-App wurde eine ganzheitliche Lernplattform (Verstehen → Trainieren).
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Lernpsychologie:</strong> Aktives Wiedererkennen und Einprägen vor dem Test senkt die Frustration deutlich.
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 4 -->
+      <article class="step-item" data-category="architecture">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 4 · Konzeption</span>
+              <h2 class="step-title">4. Machbarkeitsanalyse: Freitext-Eingabe ohne LLM?</h2>
+            </div>
+            <span class="step-time">08:53 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Prüfung, ob und wie eigene Freitext-Formulierungen ohne teure oder komplexe Sprachmodelle bewertet werden können.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s4-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s4-tech">⚙️ Technische Bewertung</button>
+            <button class="detail-toggle-btn" data-target="s4-result">💡 Empfehlung</button>
+          </div>
+
+          <div id="s4-order" class="detail-panel show">
+            <strong>Original-Anforderung:</strong> „Ich würde gerne auf eine Frage eine Antwort per Tastatur eingeben wollen. Geht das so ohne LLM-Anbindung dass er dann auch Abweichungen akzeptiert in meiner Antwort? Noch nicht ausführen nur beantworten.“
+          </div>
+          <div id="s4-tech" class="detail-panel">
+            <strong>Gegenüberstellung:</strong>
+            <ul>
+              <li><strong>Lokale Heuristik:</strong> Funktioniert über Synonyme, Wortstämme und Levenshtein-Toleranz (Tippfehler-tolerant).</li>
+              <li><strong>Grenze:</strong> Völlig freie Umschreibungen oder Metaphern können ohne semantisches Sprachverständnis fälschlich als falsch bewertet werden.</li>
+            </ul>
+          </div>
+          <div id="s4-result" class="detail-panel">
+            <strong>Empfehlung:</strong> Für echte semantische Freiheit ist ein LLM ideal – alternativ eine Kombination aus toleranten Konzept-Gruppen und Selbsteinschätzung.
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Beratungskompetenz:</strong> Ehrlich und transparent die Vor- und Nachteile aufgezeigt, bevor Code geschrieben wurde.
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 5 -->
+      <article class="step-item" data-category="architecture">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 5 · Lösungsfindung</span>
+              <h2 class="step-title">5. Der Knackpunkt: KI-Bewertung ohne externen API-Key</h2>
+            </div>
+            <span class="step-time">08:56 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Nutzer wünschte KI-Auswertung, lehnte aber komplizierte API-Keys ab („Doch das geht ohne API. Prüf das nochmal konkret“). Analyse moderner On-Device-KI-Möglichkeiten.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s5-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s5-tech">⚙️ Recherche & Analyse</button>
+            <button class="detail-toggle-btn" data-target="s5-result">💡 Die Lösung</button>
+          </div>
+
+          <div id="s5-order" class="detail-panel show">
+            <strong>Nutzer-Impuls:</strong> „Ne, das ist aber nicht sauber. Dann doch lieber mit einer LLM-Anbindung... Doch das geht ohne API. Prüf das nochmal konkret.“
+          </div>
+          <div id="s5-tech" class="detail-panel">
+            <strong>Identifizierte Optionen ohne API-Key:</strong>
+            <ul>
+              <li><strong>Chrome Built-in AI (Prompt API / Gemini Nano):</strong> Moderne Chromium-Browser haben ein kompaktes Modell direkt an Bord, ansprechbar über <code>window.ai.languageModel</code> – 100% lokal und ohne API-Schlüssel!</li>
+              <li><strong>In-Browser WebGPU (WebLLM):</strong> Lokales Modell direkt im WebAssembly/WebGPU-Speicher.</li>
+              <li><strong>Smarte Konzept-Heuristik:</strong> Ausfallsicherer Fallback für jeden Browser ohne Voraussetzungen.</li>
+            </ul>
+          </div>
+          <div id="s5-result" class="detail-panel">
+            <strong>Beschluss:</strong> Hybride Architektur wählen – wenn Chrome Built-in AI verfügbar ist, nutzt die App sie; andernfalls greift die intelligente Konzept-Prüfung geräuschlos ein.
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Technologie-Durchbruch:</strong> On-Device-KI in PWAs ermöglicht Datenschutz, Null-Kosten und Null-Setup.
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 6 -->
+      <article class="step-item" data-category="highlight">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div>
+              <span class="step-tag">Schritt 6 · Finale Lösung</span>
+              <h2 class="step-title">6. Umsetzung des 3. Registers: „✍️ Selbst tippen“</h2>
+            </div>
+            <span class="step-time">09:01 Uhr</span>
+          </div>
+          <p class="step-summary">
+            Umsetzung der einfachsten, ausfallsicheren Variante: Ein vollständiges Freitext-Quiz, das eigene Worte versteht, Kernaspekte aufschlüsselt und keinerlei Vorkenntnisse oder API-Keys verlangt.
+          </p>
+
+          <div class="btn-row">
+            <button class="detail-toggle-btn active" data-target="s6-order">🎯 Nutzerauftrag</button>
+            <button class="detail-toggle-btn" data-target="s6-tech">⚙️ Technische Umsetzung</button>
+            <button class="detail-toggle-btn" data-target="s6-result">💡 Endzustand</button>
+          </div>
+
+          <div id="s6-order" class="detail-panel show">
+            <strong>Original-Anforderung:</strong> „Nimm die einfachste Variante. Das check ich alles nicht. Und dann setz es um.“
+          </div>
+          <div id="s6-tech" class="detail-panel">
+            <strong>Fertige Komponenten:</strong>
+            <ul>
+              <li>Neues 3. Tab: <code>✍️ Selbst tippen</code> neben Lernen und Karteikarten.</li>
+              <li>Jede Frage besitzt nun definierte semantische <code>conceptGroups</code> mit Synonym-Clustern.</li>
+              <li>Eingabe via Textfeld mit <code>Strg + Enter</code> Shortcut.</li>
+              <li>Visuelle Auswertung: Farbige Chips (<code>✓ Erkannt</code> vs <code>○ Noch offen</code>), Bewertung (Sehr gut / Teilweise / Unvollständig) und direkte Musterlösung.</li>
+              <li>1-Klick Aktionen: „Als gewusst werten“, „Nochmal wiederholen“, „Nächste Frage“.</li>
+            </ul>
+          </div>
+          <div id="s6-result" class="detail-panel">
+            <strong>Ergebnis:</strong> Perfekter Mix aus Leichtigkeit für den Nutzer und smarter Logik unter der Haube – funktioniert sofort in jedem Browser!
+          </div>
+
+          <div class="takeaway-box">
+            <strong>Finaler Erfolg:</strong> Der Nutzer hat eine 3-in-1 App erhalten: Nachschlagen, Karteikarten-Training und Freitext-Prüfung in einem System.
+          </div>
+        </div>
+      </article>
+
+    </main>
+
+    <section class="app-cta">
+      <h2>Direkt ausprobieren</h2>
+      <p>Die Lernapp und diese Timeline sind jederzeit lokal auf deinem Rechner erreichbar.</p>
+      <a href="./index.html" class="btn-primary">Zur Lernapp wechseln →</a>
+    </section>
+  </div>
+  <script src="./timeline.js"></script>
+</body>
+</html>

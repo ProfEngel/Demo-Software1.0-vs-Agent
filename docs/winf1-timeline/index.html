@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; manifest-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="Reine Karteikarten-Lernapp für Wirtschaftsinformatik: Sozio-technische Informationssysteme, GenAI, Agentic AI und mehr." />
+  <title>WINF1 Karteikarten – Wirtschaftsinformatik</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <img src="./icon.svg" alt="WINF1 Logo" />
+        <div>
+          <h1>WINF1 Karteikarten</h1>
+          <p>Wirtschaftsinformatik lernen</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="shuffleBtn" class="icon-btn" type="button" title="Karten mischen">Mischen</button>
+        <button id="resetBtn" class="icon-btn" type="button" title="Fortschritt zurücksetzen">Reset</button>
+      </div>
+    </header>
+
+    <nav id="filters" class="filters" aria-label="Themenfilter"></nav>
+
+    <div class="mode-switch" role="tablist" aria-label="Lernmodus wählen">
+      <button id="modeLearnBtn" class="mode-btn active" type="button" role="tab" aria-selected="true">📖 Erst lernen</button>
+      <button id="modeQuizBtn" class="mode-btn" type="button" role="tab" aria-selected="false">🃏 Karteikarten</button>
+      <button id="modeInputBtn" class="mode-btn" type="button" role="tab" aria-selected="false">✍️ Selbst tippen</button>
+    </div>
+
+    <section id="learnView" class="learn-view" aria-label="Lernübersicht"></section>
+
+    <!-- Modus 3: Freitext-Eingabe mit smarter Bewertung -->
+    <section id="inputView" class="input-view" hidden aria-label="Freitext-Quiz">
+      <div class="input-card">
+        <div class="card-top">
+          <span id="inputCategory" class="badge">Thema</span>
+          <span id="inputCardCounter" class="side-label">Frage 1 / 24</span>
+        </div>
+        
+        <h2 id="inputQuestion" class="input-question"></h2>
+
+        <div class="input-field-group">
+          <label for="userAnswerInput" class="input-label">Deine Antwort in eigenen Worten:</label>
+          <textarea id="userAnswerInput" maxlength="1000" class="answer-textarea" rows="4" placeholder="Tippe hier deine Erklärung ein... (Abweichungen und eigene Formulierungen werden automatisch akzeptiert)"></textarea>
+        </div>
+
+        <div class="input-actions">
+          <button id="submitAnswerBtn" class="btn btn-primary" type="button">Antwort prüfen</button>
+          <button id="skipInputBtn" class="btn" type="button">Lösung anzeigen</button>
+        </div>
+
+        <div id="evaluationResult" class="eval-result" hidden>
+          <div class="eval-header">
+            <span id="evalBadge" class="eval-badge">Bewertung</span>
+            <span id="evalEngineNote" class="eval-engine-note"></span>
+          </div>
+          <p id="evalFeedback" class="eval-feedback"></p>
+
+          <div id="conceptsWrap" class="concepts-wrap"></div>
+
+          <div class="eval-muster-wrap">
+            <h3 class="muster-heading">Musterlösung:</h3>
+            <p id="evalMuster" class="eval-muster"></p>
+            <div id="evalHint" class="hint-box"></div>
+          </div>
+
+          <div class="eval-actions">
+            <button id="markKnownBtn" class="btn btn-known" type="button">✓ Als gewusst werten</button>
+            <button id="markAgainBtn" class="btn btn-again" type="button">↻ Nochmal wiederholen</button>
+            <button id="nextInputBtn" class="btn btn-primary" type="button">Nächste Frage →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modus 2: Klassische Karteikarten -->
+    <div id="quizView" class="quiz-view" hidden>
+    <section class="progress-wrap" aria-label="Lernfortschritt">
+      <div class="progress-meta">
+        <span>Karte <strong id="cardCounter">1 / 1</strong></span>
+        <span>Gewusst: <strong id="knownCounter">0</strong></span>
+      </div>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div id="flashcard" class="card" role="button" tabindex="0" aria-label="Karteikarte umdrehen">
+        <div class="card-face card-front">
+          <div class="card-top">
+            <span id="frontCategory" class="badge">Thema</span>
+            <span class="side-label">FRAGE</span>
+          </div>
+          <div class="card-content">
+            <p id="questionText" class="question"></p>
+          </div>
+          <div class="card-footer">
+            <span>Tippen oder Leertaste zum Umdrehen</span>
+            <span id="frontStatus"></span>
+          </div>
+        </div>
+
+        <div class="card-face card-back">
+          <div class="card-top">
+            <span id="backCategory" class="badge">Thema</span>
+            <span class="side-label">LÖSUNG</span>
+          </div>
+          <div class="card-content">
+            <p id="answerText" class="answer"></p>
+            <div id="hintBox" class="hint-box"></div>
+          </div>
+          <div class="card-footer">
+            <span>Tippen zum Zurückdrehen</span>
+            <span id="backStatus"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="assess-row" aria-label="Selbsteinschätzung">
+      <button id="againBtn" class="btn btn-again" type="button">Nochmal (1)</button>
+      <button id="knownBtn" class="btn btn-known" type="button">Gewusst (2)</button>
+    </section>
+
+    <section class="controls" aria-label="Navigation">
+      <button id="prevBtn" class="btn" type="button">← Zurück</button>
+      <button id="flipBtn" class="btn btn-primary" type="button">Umdrehen</button>
+      <button id="nextBtn" class="btn" type="button">Weiter →</button>
+    </section>
+
+    <p class="shortcuts">
+      Tastatur: <strong>Leertaste</strong> = Umdrehen · <strong>← / →</strong> = Navigation · <strong>1 / 2</strong> = Nochmal / Gewusst
+    </p>
+    </div>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
